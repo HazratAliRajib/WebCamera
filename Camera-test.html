@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Camera Test</title>
+    <style>
+        /* Add some styling for the page */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #333;
+            font-family: sans-serif;
+        }
+
+        #container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        #video {
+            width: 100%;
+            background-color: #fff;
+            border: 10px solid #000;
+            box-sizing: border-box;
+        }
+
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #0095ff;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Add a container element to center the content on the page -->
+    <div id="container">
+        <!-- Add a video element to display the camera feed -->
+        <video id="video"></video>
+        <!-- Add a button to start and stop the camera -->
+        <button id="btn">Start Camera</button>
+    </div>
+    <script>
+        // Get a reference to the video and button elements
+        const video = document.getElementById('video');
+        const btn = document.getElementById('btn');
+
+        // Define a function to start the camera
+        function startCamera() {
+            // Get access to the camera
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true }).then(function (stream) {
+                    // Set the source of the video element with the stream from the camera
+                    video.srcObject = stream;
+                    video.play();
+                });
+            }
+        }
+
+        // Define a function to stop the camera
+        function stopCamera() {
+            // Get the stream from the video element
+            const stream = video.srcObject;
+            // Get the tracks from the stream
+            const tracks = stream.getTracks();
+            // Stop all the tracks
+            tracks.forEach(function (track) {
+                track.stop();
+            });
+            // Set the src of the video element to an empty string to stop the video
+            video.srcObject = null;
+        }
+
+        // Add an event listener to the button to start and stop the camera when clicked
+        btn.addEventListener('click', function () {
+            if (btn.textContent === 'Start Camera') {
+                startCamera();
+                btn.textContent = 'Stop Camera';
+            } else {
+                stopCamera();
+                btn.textContent = 'Start Camera';
+            }
+        });
+    </script>
+</body>
+
+</html>
